@@ -1,0 +1,52 @@
+! ==========================================================
+! Core Switch Configuration - Small Office Network
+! ==========================================================
+
+hostname SW-CORE
+
+vlan 10
+ name SALES
+vlan 20
+ name IT
+vlan 30
+ name GUEST
+
+! --- Sales access ports (Fa0/1-8) ---
+interface range fastEthernet 0/1-8
+ switchport mode access
+ switchport access vlan 10
+ switchport port-security
+ switchport port-security maximum 1
+ switchport port-security violation shutdown
+ switchport port-security mac-address sticky
+
+! --- IT access ports (Fa0/9-16) ---
+interface range fastEthernet 0/9-16
+ switchport mode access
+ switchport access vlan 20
+ switchport port-security
+ switchport port-security maximum 1
+ switchport port-security violation shutdown
+ switchport port-security mac-address sticky
+
+! --- Guest access ports (Fa0/17-23) ---
+interface range fastEthernet 0/17-23
+ switchport mode access
+ switchport access vlan 30
+ switchport port-security
+ switchport port-security maximum 1
+ switchport port-security violation shutdown
+ switchport port-security mac-address sticky
+
+! --- Trunk to router (Fa0/24) ---
+interface fastEthernet 0/24
+ switchport mode trunk
+ switchport trunk allowed vlan 10,20,30
+ switchport trunk native vlan 99
+
+! --- Management VLAN interface ---
+interface vlan 1
+ no ip address
+ shutdown
+
+end
